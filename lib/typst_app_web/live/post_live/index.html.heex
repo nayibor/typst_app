@@ -20,6 +20,12 @@
     </div>
     <.link patch={~p"/posts/#{post}/edit"}>Edit</.link>
   </:action>
+  <:action :let={{_id, post}}>
+     <.link href={~p"/posts/#{post}/preview"}>Preview</.link>   
+  </:action>    
+  <:action :let={{_id, post}}>
+     <.link href={~p"/process_blog/#{post}/download"}>Download</.link>   
+  </:action>  
   <:action :let={{id, post}}>
     <.link
       phx-click={JS.push("delete", value: %{id: post.id}) |> hide("##{id}")}
@@ -29,6 +35,17 @@
     </.link>
   </:action>
 </.table>
+
+<.modal :if={@live_action in [:preview]} id={@post.id}   id="preview-modal" show on_cancel={JS.patch(~p"/posts")}>
+  <div>
+    <.header>
+      {@page_title}
+      <:subtitle>Use this form to preview blog # {@post.id}.</:subtitle>
+    </.header>
+    <img class="flex items-left justify-left" src={~p"/process_blog/#{@post.id}/view"}  />
+  </div>
+</.modal>
+
 
 <.modal :if={@live_action in [:new, :edit]} id="post-modal" show on_cancel={JS.patch(~p"/posts")}>
   <.live_component

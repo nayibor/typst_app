@@ -32,6 +32,13 @@ defmodule TypstAppWeb.PostLive.Index do
     |> assign(:post, nil)
   end
 
+  defp apply_action(socket, :preview, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Preview Post Pdf")
+    |> assign(:post, Blog.get_post!(id))
+  end
+
+  
   @impl true
   def handle_info({TypstAppWeb.PostLive.FormComponent, {:saved, post}}, socket) do
     {:noreply, stream_insert(socket, :posts, post)}
