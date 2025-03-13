@@ -19,9 +19,9 @@ defmodule TypstAppWeb.PageController do
       end
     filename = "Blog #{id}"
     path_typst = Path.join([:code.priv_dir(:typst_app),"/typst/typst"] )    
-    path_test_template = Path.join([:code.priv_dir(:typst_app),"/typst/main.typ"] )
+    path_api = Path.join([:code.priv_dir(:typst_app),"/typst/main.typ"] )
     path_template = "blog.typ"
-    command = "#{path_typst} compile  --input 'blogJson=#{blog_data}' --input 'templatePath=#{path_template}' -f #{format} #{path_test_template} -"
+    command = "#{path_typst} compile  --input 'blogJson=#{blog_data}' --input 'templatePath=#{path_template}' -f #{format} #{path_api} -"
     {result,code_result} = System.cmd("sh",["-c",command])
     case code_result do
       0 -> send_download(conn,{:binary,result},content_type: "application/pdf",disposition: disposition,filename: filename )
