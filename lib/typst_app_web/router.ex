@@ -18,8 +18,9 @@ defmodule TypstAppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/process_blog/:id/:type", PageController, :process_blog        
-
+    get "/process_blog/:id/:type", PageController, :process_blog
+    
+    ##live "/posts/:page", PageController, :paged_index
     live "/posts", PostLive.Index, :index
     live "/posts/new", PostLive.Index, :new
     live "/posts/:id/edit", PostLive.Index, :edit

@@ -7,6 +7,7 @@ defmodule TypstApp.Blog do
   alias TypstApp.Repo
 
   alias TypstApp.Blog.Post
+  alias TypstApp.Utils
 
   @doc """
   Returns the list of posts.
@@ -17,8 +18,11 @@ defmodule TypstApp.Blog do
       [%Post{}, ...]
 
   """
-  def list_posts do
-    Repo.all(Post)
+  def list_posts(params \\ %{limit: Utils.get_page_size(),offset: Utils.get_offset(1)}) do
+    IO.inspect(params)
+    limit = params.limit
+    offset = params.offset
+    Repo.all(from p in Post,limit: ^limit,offset: ^offset,order_by: [desc: :id] )
   end
 
   @doc """
