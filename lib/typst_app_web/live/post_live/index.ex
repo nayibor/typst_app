@@ -34,6 +34,7 @@ defmodule TypstAppWeb.PostLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Posts")
+    |> assign(:form, %{})
     |> assign(:post, nil)
   end
 
@@ -75,4 +76,11 @@ defmodule TypstAppWeb.PostLive.Index do
     |> assign(:page_data,Utils.paginate(page,length(posts)))     
     |> stream(:posts,posts,reset: true)}
   end
+
+  @impl true
+  def handle_event("search", params, socket) do
+    IO.inspect(params)
+    {:noreply,socket}
+  end
+  
 end

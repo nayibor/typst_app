@@ -7,6 +7,17 @@
   </:actions>
 </.header>
 
+<.simple_form
+  for={@form}
+  id="search-form"
+  phx-submit="search"
+  >
+  <.input  name="title" id="title" value="" type="text" label="" placeholder="Search" />
+  <:actions>
+    <.button phx-disable-with="Searching...">Search</.button>
+  </:actions>
+</.simple_form>
+
 <.table
   id="posts"
   rows={@streams.posts}
