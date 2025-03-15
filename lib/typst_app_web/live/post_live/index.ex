@@ -31,7 +31,7 @@ defmodule TypstAppWeb.PostLive.Index do
     |> assign(:post, %Post{})
   end
 
-  defp apply_action(socket, :index, params) do
+  defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Posts")
     |> assign(:post, nil)
@@ -45,13 +45,12 @@ defmodule TypstAppWeb.PostLive.Index do
 
   
   @impl true
-  def handle_info({TypstAppWeb.PostLive.FormComponent, {:saved, post}}, socket) do
+  def handle_info({TypstAppWeb.PostLive.FormComponent, {:saved, _post}}, socket) do
+    posts = Blog.list_posts()
     {:noreply,
      socket
-     |> stream_insert(:posts, post, at: 0)
-     |> assign(:page_data,Utils.paginate(1,length(socket.streams.posts)))     
-     |> stream(:posts,limit: Utils.get_page_size())
-
+     |> assign(:page_data,Utils.paginate(1,length(posts)))
+     |> stream(:posts, posts,reset: true)     
     }
   end
 
@@ -59,20 +58,18 @@ defmodule TypstAppWeb.PostLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     post = Blog.get_post!(id)
     {:ok, _} = Blog.delete_post(post)
+    posts = Blog.list_posts()    
     {:noreply,
      socket
-     |> stream_delete(:posts, post)
-     |> assign(:page_data,Utils.paginate(1,length(socket.streams.posts)))     
-     |> stream(:posts, limit: Utils.get_page_size())
+     |> assign(:page_data,Utils.paginate(1,length(posts)))
+     |> stream(:posts, posts,reset: true)     
     }
   end
 
   @impl true
-  def handle_event("paginate", %{"page" => page} = params, socket) do
+  def handle_event("paginate", %{"page" => page} = _params, socket) do
     offset = Utils.get_offset(page)
     posts = Blog.list_posts(%{offset: offset,limit: Utils.get_page_size()})
-    IO.inspect("paginate button clicked with params")
-    IO.inspect(params)
     {:noreply,
      socket
     |> assign(:page_data,Utils.paginate(page,length(posts)))     

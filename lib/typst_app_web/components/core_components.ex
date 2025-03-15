@@ -678,14 +678,14 @@ defmodule TypstAppWeb.CoreComponents do
   attr :url, :string, required: true
   attr :page, :integer, required: true
   attr :next_page_show, :boolean, required: true
-  def paginate(%{url: url,page: page,next_page_show: next_page_show} = assigns) do
+  def paginate(%{url: _url,page: page,next_page_show: next_page_show} = assigns) do
     case {page,next_page_show} do
       {1,true}  ## this is for the first page of a multi-page resultset 
 	->
         ~H"""
             <.link phx-click={JS.push("paginate", value: %{page: @page + 1})}
             class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700">
-            <.icon name="hero-chevron-double-right" class="h-3 w-3" />
+            <.icon name="hero-chevron-double-right"  />
             </.link>
             """
       {1,false} ## this is for the first page of a single-page resultset 
@@ -697,11 +697,11 @@ defmodule TypstAppWeb.CoreComponents do
         ~H"""
             <.link phx-click={JS.push("paginate", value: %{page: @page - 1})}
             class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700">
-            <.icon name="hero-chevron-double-left" class="h-3 w-3" />
+            <.icon name="hero-chevron-double-left"  />
             </.link>
             <.link phx-click={JS.push("paginate", value: %{page: @page + 1})}
             class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700">
-            <.icon name="hero-chevron-double-right" class="h-3 w-3" />
+            <.icon name="hero-chevron-double-right"  />
             </.link>
             """
 	{_,false} ## this is for the last page of a multi-page resultset
@@ -709,10 +709,9 @@ defmodule TypstAppWeb.CoreComponents do
         ~H"""
             <.link phx-click={JS.push("paginate", value: %{page: @page - 1})}
             class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700">
-            <.icon name="hero-chevron-double-left" class="h-3 w-3" />
+            <.icon name="hero-chevron-double-left"  />
             </.link>
             """
-	
     end
   end
   
