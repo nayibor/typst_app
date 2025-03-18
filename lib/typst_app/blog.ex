@@ -18,13 +18,16 @@ defmodule TypstApp.Blog do
       [%Post{}, ...]
 
   """
-  def list_posts(params \\ %{limit: Utils.get_page_size(),offset: Utils.get_offset(1)}) do
+  def list_posts(params \\ %{title: "",limit: Utils.get_page_size(),offset: Utils.get_offset(1)}) do
     IO.inspect(params)
     limit = params.limit
     offset = params.offset
-    Repo.all(from p in Post,limit: ^limit,offset: ^offset,order_by: [desc: :id] )
+    title = params.title
+    search_string = "%#{title}%"    
+    Repo.all(from p in Post,limit: ^limit,offset: ^offset,order_by: [desc: :id],where:  ilike(field(p,:title), ^search_string))
   end
 
+  
   @doc """
   Gets a single post.
 
