@@ -70,17 +70,33 @@ defmodule TypstAppWeb.PostLive.Index do
   @impl true
   def handle_event("paginate", %{"page" => page} = _params, socket) do
     offset = Utils.get_offset(page)
-    posts = Blog.list_posts(%{offset: offset,limit: Utils.get_page_size()})
+    posts = Blog.list_posts(%{offset: offset,limit: Utils.get_page_size(),title: ""})
     {:noreply,
      socket
     |> assign(:page_data,Utils.paginate(page,length(posts)))     
     |> stream(:posts,posts,reset: true)}
   end
 
+  ##this is for an empty search
   @impl true
-  def handle_event("search", params, socket) do
-    IO.inspect(params)
-    {:noreply,socket}
+  def handle_event("search", %{"title" => ""} =  _params, socket) do
+    posts = Blog.list_posts()    
+    {:noreply,
+     socket
+     |> assign(:page_data,Utils.paginate(1,length(posts)))
+     |> stream(:posts, posts,reset: true)}     
+    
   end
+
+  ##this is for a search with a real value
+  ##limit has been made big so whole search result can fit on page
+  def handle_event("search", %{"title" => title} = _params, socket) do
+    posts = Blog.list_posts(%{offset: 0,limit: 100,title: title})
+    {:noreply,
+     socket
+    |> assign(:page_data,%{cpage: 1, next_page_show: false})
+    |> stream(:posts, posts,reset: true)}
+  end
+
   
 end
